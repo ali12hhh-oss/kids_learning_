@@ -24,24 +24,19 @@ jobs:
           flutter-version: '3.24.0'
           channel: 'stable'
 
-      # ✅ إنشاء local.properties ديناميكياً مع flutter.sdk
       - name: Create local.properties
         run: |
           mkdir -p android
           echo "sdk.dir=$ANDROID_SDK_ROOT" > android/local.properties
           echo "flutter.sdk=$FLUTTER_ROOT" >> android/local.properties
 
-      # كل ملفات android/ مبنية يدوياً ومرفوعة ضمن المشروع.
-      # الاستثناء الوحيد: gradle-wrapper.jar (ملف Java مُصرَّف/binary لا يمكن
-      # كتابته كنص). هذه الخطوة تولّده فقط هو — لا تلمس أي ملف آخر بالمشروع
-      # (لا pubspec.yaml ولا lib/ ولا أي إعداد Android آخر).
+      # ✅ تحميل wrapper.jar مباشرة بدون استخدام gradle النظامي
       - name: Ensure gradle-wrapper.jar exists
         run: |
           if [ ! -f "android/gradle/wrapper/gradle-wrapper.jar" ]; then
-            cd android
-            gradle wrapper --gradle-version 8.6
-            ./gradlew --version
-            cd ..
+            mkdir -p android/gradle/wrapper
+            curl -L -o android/gradle/wrapper/gradle-wrapper.jar \
+              "https://repo1.maven.org/maven2/org/gradle/gradle-wrapper/8.6/gradle-wrapper-8.6.jar"
           fi
 
       - name: Install dependencies
