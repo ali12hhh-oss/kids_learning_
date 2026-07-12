@@ -30,19 +30,15 @@ jobs:
           echo "sdk.dir=$ANDROID_SDK_ROOT" > android/local.properties
           echo "flutter.sdk=$FLUTTER_ROOT" >> android/local.properties
 
-      - name: Ensure gradle-wrapper.jar exists
+      # ✅ إعادة توليد wrapper بشكل صحيح
+      - name: Regenerate Gradle wrapper
         run: |
-          if [ ! -f "android/gradle/wrapper/gradle-wrapper.jar" ]; then
-            mkdir -p android/gradle/wrapper
-            curl -L -o android/gradle/wrapper/gradle-wrapper.jar \
-              "https://repo1.maven.org/maven2/org/gradle/gradle-wrapper/8.6/gradle-wrapper-8.6.jar"
-          fi
-
-      # ✅ إعادة ضبط متغيرات JVM لتجنب التضارب
-      - name: Set JVM environment
-        run: |
-          echo "JAVA_OPTS=" >> $GITHUB_ENV
-          echo "GRADLE_OPTS=" >> $GITHUB_ENV
+          rm -rf android/gradle/wrapper/gradle-wrapper.jar
+          rm -f android/gradlew
+          cd android
+          gradle wrapper --gradle-version 8.6 --no-daemon
+          cd ..
+          chmod +x android/gradlew
 
       - name: Install dependencies
         run: flutter pub get
