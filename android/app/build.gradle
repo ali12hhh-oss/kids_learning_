@@ -24,8 +24,8 @@ plugins {
 
 android {
     namespace = "com.example.kidslearning.kids_learning_app"
-    compileSdk = flutter.compileSdkVersion
-    ndkVersion = flutter.ndkVersion
+    compileSdk = 34
+    ndkVersion = "26.1.10909125"
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
@@ -46,8 +46,6 @@ android {
 
     buildTypes {
         release {
-            // موقّع بشهادة التصحيح (debug) مؤقتاً حتى تضيف شهادة توقيع
-            // خاصة بك عند النشر الفعلي على المتجر — راجع قسم التوقيع بالـ README
             signingConfig = signingConfigs.debug
         }
     }
