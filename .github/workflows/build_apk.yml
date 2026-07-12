@@ -30,7 +30,6 @@ jobs:
           echo "sdk.dir=$ANDROID_SDK_ROOT" > android/local.properties
           echo "flutter.sdk=$FLUTTER_ROOT" >> android/local.properties
 
-      # ✅ تحميل wrapper.jar مباشرة بدون استخدام gradle النظامي
       - name: Ensure gradle-wrapper.jar exists
         run: |
           if [ ! -f "android/gradle/wrapper/gradle-wrapper.jar" ]; then
@@ -38,6 +37,12 @@ jobs:
             curl -L -o android/gradle/wrapper/gradle-wrapper.jar \
               "https://repo1.maven.org/maven2/org/gradle/gradle-wrapper/8.6/gradle-wrapper-8.6.jar"
           fi
+
+      # ✅ إعادة ضبط متغيرات JVM لتجنب التضارب
+      - name: Set JVM environment
+        run: |
+          echo "JAVA_OPTS=" >> $GITHUB_ENV
+          echo "GRADLE_OPTS=" >> $GITHUB_ENV
 
       - name: Install dependencies
         run: flutter pub get
