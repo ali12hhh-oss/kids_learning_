@@ -1,0 +1,49 @@
+name: Build Android APK
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.24.0'
+          channel: 'stable'
+
+      # كل ملفات android/ مبنية يدوياً ومرفوعة ضمن المشروع.
+      # الاستثناء الوحيد: gradle-wrapper.jar (ملف Java مُصرَّف/binary لا يمكن
+      # كتابته كنص). هذه الخطوة تولّده فقط هو — لا تلمس أي ملف آخر بالمشروع
+      # (لا pubspec.yaml ولا lib/ ولا أي إعداد Android آخر).
+      - name: Ensure gradle-wrapper.jar exists
+        run: |
+          if [ ! -f "android/gradle/wrapper/gradle-wrapper.jar" ]; then
+            cd android
+            gradle wrapper --gradle-version 8.6
+            cd ..
+          fi
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Build APK (release)
+        run: flutter build apk --release
+
+      - name: Upload APK artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: kids-learning-app-apk
+          path: build/app/outputs/flutter-apk/app-release.apk
