@@ -30,20 +30,15 @@ jobs:
           echo "sdk.dir=$ANDROID_SDK_ROOT" > android/local.properties
           echo "flutter.sdk=$FLUTTER_ROOT" >> android/local.properties
 
-      # ✅ تثبيت Gradle 8.6 يدوياً
-      - name: Install Gradle 8.6
-        run: |
-          wget https://services.gradle.org/distributions/gradle-8.6-bin.zip -O /tmp/gradle-8.6.zip
-          unzip -q /tmp/gradle-8.6.zip -d /tmp/
-          echo "/tmp/gradle-8.6/bin" >> $GITHUB_PATH
-
-      # ✅ توليد wrapper باستخدام Gradle 8.6
+      # ✅ تثبيت Gradle 8.7 وتوليد wrapper
       - name: Setup Gradle wrapper
         run: |
           rm -rf android/gradle/wrapper/gradle-wrapper.jar
           rm -f android/gradlew
           cd android
-          /tmp/gradle-8.6/bin/gradle wrapper --gradle-version 8.6 --no-daemon
+          wget https://services.gradle.org/distributions/gradle-8.7-bin.zip -O /tmp/gradle-8.7.zip
+          unzip -q /tmp/gradle-8.7.zip -d /tmp/
+          /tmp/gradle-8.7/bin/gradle wrapper --gradle-version 8.7 --no-daemon
           cd ..
           chmod +x android/gradlew
 
