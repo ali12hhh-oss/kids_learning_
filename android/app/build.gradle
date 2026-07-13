@@ -24,7 +24,7 @@ if (flutterVersionName == null) {
 
 android {
     namespace = "com.example.kidslearning.kids_learning_app"
-    compileSdk = 34
+    compileSdk = 36  // ✅ تغيير من 34 إلى 36
     ndkVersion = "26.1.10909125"
 
     compileOptions {
@@ -38,7 +38,7 @@ android {
 
     defaultConfig {
         applicationId = "com.example.kidslearning.kids_learning_app"
-        minSdk = 21
+        minSdk = 24  // ✅ تغيير من 21 إلى 24
         targetSdk = 34
         versionCode = flutterVersionCode.toInteger()
         versionName = flutterVersionName
